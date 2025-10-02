@@ -1,0 +1,50 @@
+graph={
+    '1':set(['2','3']),
+    '2':set(['1','4','5']),
+    '3':set(['1','6']),
+    '4':set(['2']),
+    '5':set(['2','6']),
+    '6':set(['3','5'])
+    }
+def bfs(start):
+    queue=[start]
+    levels={}
+    levels[start]=0
+    visited=set([start])
+    while queue:
+        node=queue.pop(0)
+        neighbours=graph[node]
+        for neighbour in neighbours:
+            if neighbour not in visited:
+                queue.append(neighbour)
+                visited.add(neighbour)
+                levels[neighbour]=levels[node]+1
+    print("Levels: ",levels)
+    return visited
+print("BFS: ",str(bfs('1')))
+
+
+#for finding Path:
+def bfs_path(graph,start,goal):
+    queue=[(start,[start])]
+    while queue:
+        (vertex,path)=queue.pop(0)
+        for next in graph[vertex]-set(path):
+            if next==goal:
+                yield path+[next]
+            else:
+                queue.append((next,path+[next]))
+result=list(bfs_path(graph,'1','6'))
+print("Path: ",result)
+
+
+
+
+#for Finding shortest path:
+def shortest_path(graph,start,goal):
+    try:
+        return next(bfs_path(graph,start,goal))
+    except StopIteration:
+        return None
+result1=shortest_path(graph,'1','6')
+print('Shortest Path:',result)
